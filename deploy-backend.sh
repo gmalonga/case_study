@@ -9,10 +9,6 @@ cd backend
 terraform init
 echo "Terraform initialized"
 
-# Run this command to get and copy the billing ID to use
-echo "To get the billing ID, run:"
-echo "gcloud beta billing accounts list"
-
 echo "Deploying buckets for Terraform state..."
 terraform apply
 echo "Backends successfully deployed!"
