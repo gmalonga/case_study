@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: webyn-apps
+  namespace: argocd
+spec:
+  generators:
+  - git:
+      repoURL: https://github.com/webyn/webyn-gitops.git
+      revision: HEAD
+      directories:
+      - path: apps/*
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/webyn/webyn-gitops.git
+        targetRevision: HEAD
+        path: '{{path}}'
+        helm:
+          valueFiles: 
+          - '../../environments/production/values.yaml'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{path.basename}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true 
